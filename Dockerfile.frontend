@@ -1,0 +1,14 @@
+FROM node:18
+
+WORKDIR /app
+
+COPY ./frontend/constructora-frontend/package.json ./
+COPY ./frontend/constructora-frontend/package-lock.json ./
+
+RUN npm install
+
+COPY ./frontend/constructora-frontend .
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]
