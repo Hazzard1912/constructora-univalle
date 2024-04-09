@@ -80,8 +80,12 @@ WSGI_APPLICATION = 'constructora.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres.bnstrmsrmhjvlbygrqbk',
+        'PASSWORD': 'constructoraDS1#',
+        'HOST': 'aws-0-us-west-1.pooler.supabase.com',
+        'PORT': '5432'
     }
 }
 
