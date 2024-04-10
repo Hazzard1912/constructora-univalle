@@ -1,11 +1,24 @@
-import { useState } from 'react'
+import { useState } from "react";
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './componentes/login';
+import Inicio from './componentes/inicio';
+import Register from './componentes/register';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Inicio />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
+  );
+  /*
+  const [count, setCount] = useState(0);
   return (
     <>
       <div>
@@ -30,6 +43,7 @@ function App() {
       </p>
     </>
   )
+  */
 }
 
-export default App
+export default App;
