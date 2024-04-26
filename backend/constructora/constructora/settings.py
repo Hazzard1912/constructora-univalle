@@ -92,10 +92,10 @@ WSGI_APPLICATION = 'constructora.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres.bnstrmsrmhjvlbygrqbk',
-        'PASSWORD': 'constructoraDS1#',
-        'HOST': 'aws-0-us-west-1.pooler.supabase.com',
+        'NAME': 'constructora',
+        'USER': 'univalle_user',
+        'PASSWORD': 'univalle_pass',
+        'HOST': 'constructora_postgres',
         'PORT': '5432'
     }
 }
