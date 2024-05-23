@@ -6,7 +6,10 @@ from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from django.shortcuts import render
 from django.http import JsonResponse
-
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from .models import UserProfile
+from .Api.serializers import UserProfileSerializer
 
         
 # LOGICA DE LOGIN 
@@ -37,3 +40,27 @@ def login_view(request):
     
 def welcome(request):
     return render(request, 'welcome.html')
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = UserProfile(
+            photo=request.data.get('photo'),
+            id_type=request.data.get('id_type'),
+            id_number=request.data.get('id_number'),
+            last_name=request.data.get('last_name'),
+            first_name=request.data.get('first_name'),
+            role=request.data.get('role'),
+            username=request.data.get('username'),
+            password=request.data.get('password'),  
+            gender=request.data.get('gender'),
+            address=request.data.get('address'),
+            phone_number=request.data.get('phone_number'),
+        )
+        user.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
