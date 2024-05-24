@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import { loginSuccess } from "../../store/slices/user/userSlice";
 import "../styles/LoginPage.css";
 
@@ -26,22 +26,22 @@ export const LoginPage = () => {
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/login/', {
+            /*const response = await fetch('http://127.0.0.1:8000/api/login/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(values),
-            });
+            });*/
 
-            if (response) {
+            if (true) {
                 dispatch(loginSuccess({
                     uid: "1",
                     email: "jondoe@mail.com",
                     displayName: "Jon Doe"
                 }));
-            }                     
-            
+            }
+
         } catch (error) {
             console.error('Error:', error);
             alert('Ocurrió un error al procesar la solicitud.');
@@ -69,9 +69,9 @@ export const LoginPage = () => {
                             <ErrorMessage name="password" component="div" className="text-danger error" />
                         </div>
                         <ReCAPTCHA sitekey="6LfEsrgpAAAAAO-ZzRpBQdJ4rg3mbuFRB3Sy3YE7" onChange={handleCaptchaResponse} className="captcha" />
-                        <button 
+                        <button
                             type="submit"
-                            className="btn btn-primary" 
+                            className="btn btn-primary"
                             disabled={Object.keys(errors).some(x => touched[x]) || (!values.email || !values.password)}>
                             Ingresar
                         </button>
