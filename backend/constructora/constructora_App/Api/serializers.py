@@ -4,10 +4,10 @@ from ..models import UserProfile
 class UserProfileSerializer(serializers.ModelSerializer):
    
     ID_TYPE_CHOICES = [
-        ('DNI', 'C.C Cédula de Ciudadania'),
-        ('TI', 'T.I Tarjeta de Identidad'),
-        ('CE', 'Cédula de Extranjería'),
-        ('PAS', 'Pasaporte'),
+        ('C.C', 'C.C Cédula de Ciudadania'),
+        ('T.I', 'T.I Tarjeta de Identidad'),
+        ('C.E', 'Cédula de Extranjería'),
+        ('PASAPORTE', 'Pasaporte'),
     ]
 
     id_type = serializers.ChoiceField(choices=ID_TYPE_CHOICES)

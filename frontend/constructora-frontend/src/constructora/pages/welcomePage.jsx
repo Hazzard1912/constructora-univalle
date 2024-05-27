@@ -1,9 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 
 export const WelcomePage = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [showBoxes, setShowBoxes] = useState(false);
     const [showDashboard, setShowDashboard] = useState(false);
+    const [userProfiles, setUserProfiles] = useState([]);
+    const [editingUser, setEditingUser] = useState(null);
+    const [newUser, setNewUser] = useState({
+        photo: '',
+        id_type: '',
+        id_number: '',
+        last_name: '',
+        first_name: '',
+        role: '',
+        username: '',
+        password: '',
+        gender: '',
+        address: '',
+        phone_number: ''
+    });
+    const [showNewUserForm, setShowNewUserForm] = useState(false);
     const indicatorRef = useRef(null);
 
     useEffect(() => {
@@ -36,6 +53,19 @@ export const WelcomePage = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (showBoxes) {
+            // Fetch user profiles when showBoxes is true
+            axios.get('http://localhost:8000/api/users/')
+                .then(response => {
+                    setUserProfiles(response.data);
+                })
+                .catch(error => {
+                    console.error('There was an error fetching the user profiles!', error);
+                });
+        }
+    }, [showBoxes]);
+
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
@@ -51,6 +81,76 @@ export const WelcomePage = () => {
             setShowBoxes(false);
             setShowDashboard(false);
         }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewUser(prevState => ({ ...prevState, [name]: value }));
+    };
+
+    const handleAddUser = () => {
+        // Crea un nuevo objeto de usuario excluyendo el campo "photo" si no hay una imagen seleccionada
+        const userData = {
+            id_type: newUser.id_type,
+            id_number: newUser.id_number,
+            last_name: newUser.last_name,
+            first_name: newUser.first_name,
+            role: newUser.role,
+            username: newUser.username,
+            password: newUser.password,
+            gender: newUser.gender,
+            address: newUser.address,
+            phone_number: newUser.phone_number
+        };
+        // Si hay una imagen seleccionada, se incluye el campo "photo" en el objeto de usuario
+        if (newUser.photo) {
+            userData.photo = newUser.photo;
+        }
+    
+        axios.post('http://localhost:8000/api/users/', userData)
+            .then(response => {
+                setUserProfiles([...userProfiles, response.data]);
+                setNewUser({
+                    photo: '',
+                    id_type: '',
+                    id_number: '',
+                    last_name: '',
+                    first_name: '',
+                    role: '',
+                    username: '',
+                    password: '',
+                    gender: '',
+                    address: '',
+                    phone_number: ''
+                });
+                setShowNewUserForm(false);
+            })
+            .catch(error => {
+                console.error('There was an error creating the user!', error);
+            });
+    };
+    
+
+    const handleDeleteUser = (id) => {
+        axios.delete(`http://localhost:8000/api/users/${id}/`)
+            .then(() => {
+                setUserProfiles(userProfiles.filter(user => user.id !== id));
+            })
+            .catch(error => {
+                console.error('There was an error deleting the user!', error);
+            });
+    };
+
+    const handleUpdateUser = (id, updatedData) => {
+        setEditingUser(user);
+        setShowNewUserForm(true);
+        axios.put(`http://localhost:8000/api/users/${id}/`, updatedData)
+            .then(response => {
+                setUserProfiles(userProfiles.map(user => user.id === id ? response.data : user));
+            })
+            .catch(error => {
+                console.error('There was an error updating the user!', error);
+            });
     };
 
     return (
@@ -171,11 +271,12 @@ export const WelcomePage = () => {
                         background: #fff;
                         border-radius: 10px;
                         display: flex;
+                        flex-direction: column;
                         justify-content: center;
                         align-items: center;
                         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
                         color: #222327;
-                        font-size: 2.2em;
+                        font-size: 1.2em;
                     }
 
                     .dashboard-box {
@@ -225,6 +326,50 @@ export const WelcomePage = () => {
 
                     .menu-item:hover {
                         background: #f0f0f0;
+                    }
+
+                    .input {
+                        margin: 5px 0;
+                        padding: 10px;
+                        width: 80%;
+                        border: 1px solid #ccc;
+                        border-radius: 5px;
+                    }
+
+                    .btn {
+                        margin: 5px;
+                        padding: 10px 20px;
+                        border: none;
+                        border-radius: 5px;
+                        background-color: #4CAF50;
+                        color: #fff;
+                        cursor: pointer;
+                    }
+
+                    .btn:hover {
+                        background-color: #45a049;
+                    }
+
+                    .btn-delete {
+                        background-color: #f44336;
+                    }
+
+                    .btn-delete:hover {
+                        background-color: #e53935;
+                    }
+
+                    .btn-edit {
+                        background-color: #2196F3;
+                    }
+
+                    .btn-edit:hover {
+                        background-color: #1e88e5;
+                    }
+
+                    .new-user-form {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
                     }
                 `}
             </style>
@@ -282,22 +427,53 @@ export const WelcomePage = () => {
             {/* Menú desplegable */}
             <div className="side-menu">
                 <div className="menu-item" onClick={() => handleMenuItemClick('Gestión de usuarios')}>Gestión de usuarios</div>
-                <div className="menu-item" onClick={() => handleMenuItemClick('Dashboard')}>Dashboard</div>
                 <div className="menu-item" onClick={() => handleMenuItemClick('Gestión de obras')}>Gestión de obras</div>
+                <div className="menu-item" onClick={() => handleMenuItemClick('Dashboard')}>Dashboard</div>
             </div>
             <main>
-                {showBoxes && (
-                    <>
-                        <div className="box">Sección 1</div>
-                        <div className="box">Sección 2</div>
-                        <div className="box">Sección 3</div>
-                        <div className="box">Sección 4</div>
-                        <div className="box">Sección 5</div>
-                        <div className="box">Sección 6</div>
-                    </>
-                )}
+                {showBoxes && userProfiles.map((user, index) => (
+                    <div key={index} className="box">
+                        <div>
+                            <img src={user.photo}  width="100" />
+                            <p>{user.first_name} {user.last_name}</p>
+                            <p>{user.role}</p>
+                            <p>{user.id_type }: {user.id_number}</p>
+                            <p>{user.address}</p>
+                            <p>{user.phone_number}</p>
+                            <button className="btn btn-edit" onClick={() => handleUpdateUser(user.id, user)}>Editar</button>
+                            <button className="btn btn-delete" onClick={() => handleDeleteUser(user.id)}>Eliminar</button>
+                        </div>
+                    </div>
+                ))}
+
                 {showDashboard && (
-                    <div className="dashboard-box">Estadísticas del Dashboard</div>
+                    <div className="dashboard-box">
+                        Dashboard Content
+                    </div>
+                )}
+                {showBoxes && (
+                    <div className="box">
+                        {!showNewUserForm ? (
+                            <button className="btn" onClick={() => setShowNewUserForm(true)}>Agregar</button>
+                        ) : (
+                            <div className="new-user-form">
+                                <h3>Agregar nuevo usuario</h3>
+                                <input type="file" name="photo" className="input" onChange={handleInputChange} />
+                                <input type="text" name="id_type" placeholder="Tipo de Documento" className="input" value={newUser.id_type} onChange={handleInputChange} />
+                                <input type="text" name="id_number" placeholder="Número de Documento" className="input" value={newUser.id_number} onChange={handleInputChange} />
+                                <input type="text" name="last_name" placeholder="Apellido" className="input" value={newUser.last_name} onChange={handleInputChange} />
+                                <input type="text" name="first_name" placeholder="Nombre" className="input" value={newUser.first_name} onChange={handleInputChange} />
+                                <input type="text" name="role" placeholder="Rol" className="input" value={newUser.role} onChange={handleInputChange} />
+                                <input type="text" name="username" placeholder="Usuario" className="input" value={newUser.username} onChange={handleInputChange} />
+                                <input type="password" name="password" placeholder="Contraseña" className="input" value={newUser.password} onChange={handleInputChange} />
+                                <input type="text" name="gender" placeholder="Género" className="input" value={newUser.gender} onChange={handleInputChange} />
+                                <input type="text" name="address" placeholder="Dirección" className="input" value={newUser.address} onChange={handleInputChange} />
+                                <input type="text" name="phone_number" placeholder="Número de teléfono" className="input" value={newUser.phone_number} onChange={handleInputChange} />
+                                <button className="btn" onClick={handleAddUser}>Agregar</button>
+                                <button className="btn btn-delete" onClick={() => setShowNewUserForm(false)}>Cancelar</button>
+                            </div>
+                        )}
+                    </div>
                 )}
             </main>
         </div>
