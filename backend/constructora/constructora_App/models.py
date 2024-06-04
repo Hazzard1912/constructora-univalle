@@ -46,3 +46,25 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.role}"
     
+class Work(models.Model):
+    STATUS_CHOICES = [
+        ('asignada', 'Asignada'),
+        ('en desarrollo', 'En Desarrollo'),
+        ('en revisión', 'En Revisión'),
+        ('aceptada', 'Aceptada'),
+    ]
+
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    location = models.CharField(max_length=255)
+    work_type = models.CharField(max_length=255)
+    start_date = models.DateField()
+
+    director = models.ForeignKey(UserProfile, related_name='work_director', on_delete=models.SET_NULL, null=True, limit_choices_to={'role': 'Director de obra'})
+    foreman = models.ForeignKey(UserProfile, related_name='work_foreman', on_delete=models.SET_NULL, null=True, limit_choices_to={'role': 'Capataz de obra'})
+    laborers = models.ManyToManyField(UserProfile, related_name='work_laborers', limit_choices_to={'role': 'Peón'})
+    assistants = models.ManyToManyField(UserProfile, related_name='work_assistants', limit_choices_to={'role': 'Ayudante de albañil'})
+
+    def __str__(self):
+        return self.name

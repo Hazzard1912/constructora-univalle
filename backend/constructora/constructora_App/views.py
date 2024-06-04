@@ -8,8 +8,8 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .models import UserProfile
-from .Api.serializers import UserProfileSerializer
+from .models import UserProfile, Work
+from .Api.serializers import UserProfileSerializer, WorkSerializer
 
         
 # LOGICA DE LOGIN 
@@ -64,3 +64,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         )
         user.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+class WorkViewSet(viewsets.ModelViewSet):
+    queryset = Work.objects.all()
+    serializer_class = WorkSerializer
