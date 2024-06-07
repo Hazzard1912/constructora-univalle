@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -146,3 +147,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #para las peticiones al servidor desde otro servidor
 #util para las peticiones del servidor del frontend al servidor del backend
 CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+
+MEDIA_URL = '/backend/constructora/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '')

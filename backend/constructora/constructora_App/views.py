@@ -8,8 +8,8 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .models import UserProfile, Work
-from .Api.serializers import UserProfileSerializer, WorkSerializer
+from .models import UserProfile, Work, Task, TaskProgress
+from .Api.serializers import UserProfileSerializer, WorkSerializer, TaskSerializer, TaskProgressSerializer
 
         
 # LOGICA DE LOGIN 
@@ -68,3 +68,26 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 class WorkViewSet(viewsets.ModelViewSet):
     queryset = Work.objects.all()
     serializer_class = WorkSerializer
+    
+
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class TaskProgressViewSet(viewsets.ModelViewSet):
+    queryset = TaskProgress.objects.all()
+    serializer_class = TaskProgressSerializer

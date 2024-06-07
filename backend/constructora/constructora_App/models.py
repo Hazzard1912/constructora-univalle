@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 # Create your models here.
 # Django -Admin
 # Name = constructora
@@ -68,3 +67,46 @@ class Work(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Task(models.Model):
+    STATUS_CHOICES = [
+        ('asignada', 'Asignada'),
+        ('en desarrollo', 'En desarrollo'),
+        ('en revisión', 'En revisión'),
+        ('aceptada', 'Aceptada'),
+    ]
+    
+    TASK_TYPE_CHOICES = [
+        ('obra negra', 'Obra Negra'),
+        ('obra gris', 'Obra Gris'),
+        ('obra blanca', 'Obra Blanca'),
+    ]
+
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='tasks')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='asignada')
+    foreman = models.ForeignKey(UserProfile, on_delete=models.CASCADE, limit_choices_to={'role': 'Capataz de obra'}, related_name='tasks_as_foreman')
+    description = models.TextField()
+    estimated_completion_date = models.DateField()
+    assistants = models.ManyToManyField(UserProfile, related_name='tasks_as_assistant', limit_choices_to={'role': 'Ayudante de albañil'})
+    laborers = models.ManyToManyField(UserProfile, related_name='tasks_as_laborer', limit_choices_to={'role': 'Peón'})
+    task_type = models.CharField(max_length=20, choices=TASK_TYPE_CHOICES)
+    assignment_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Tarea de {self.work.name}"
+    
+class TaskProgress(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='progresses')
+    description = models.TextField()
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    audio_note = models.FileField(upload_to='audio_notes/', null=True, blank=True)
+    photo = models.ImageField(upload_to='photos/', null=True, blank=True)
+    document = models.FileField(upload_to='documents/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Avance de la tarea {self.task.id} - {self.task.work.name}"
+    
