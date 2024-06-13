@@ -1,18 +1,18 @@
 version: '3.8'
 
 services:
-  postgres:
-    container_name: 'constructora_postgres'
-    image: 'postgres:13'
-    ports:
-      - '127.0.0.1:5432:5432'
-    volumes:
-      - 'pgdata:/var/lib/postgresql/data'
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_HOST_AUTH_METHOD=trust
+  # postgres:
+  #   container_name: 'constructora_postgres'
+  #   image: 'postgres:13'
+  #   ports:
+  #     - '127.0.0.1:5432:5432'
+  #   volumes:
+  #     - 'pgdata:/var/lib/postgresql/data'
+  #   environment:
+  #     - POSTGRES_DB=${POSTGRES_DB}
+  #     - POSTGRES_USER=${POSTGRES_USER}
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  #     - POSTGRES_HOST_AUTH_METHOD=trust
     
   backend:
     container_name: 'constructora_backend'
@@ -26,8 +26,8 @@ services:
       - '8000:8000'
     volumes:
       - './backend:/app'
-    depends_on:
-      - postgres
+    # depends_on:
+    #   - postgres
   
   frontend:
     container_name: 'constructora_frontend'
@@ -45,5 +45,5 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
 
-volumes:
-  pgdata:
+# volumes:
+#   pgdata:
