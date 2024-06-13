@@ -1,5 +1,5 @@
 .auth-title {
-    font-size: 4rem;
+    font-size: 2.8rem;
     /* Color amarillo */
     color: #f0c929;
     font-weight: 700;
@@ -22,7 +22,7 @@
     background-color: rgba(26, 25, 25, 0.822);
     color: lightgray;
     height: 100%;
-    font-size: 2rem;
+    font-size: 1.5rem;
     border-radius: 0;
     padding: 0;
 }
@@ -31,7 +31,7 @@
     padding: 2rem;
     background-color: rgba(11, 10, 14, 0.918);
     color: lightgray;
-    font-size: 2rem;
+    font-size: 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -45,7 +45,7 @@
     .auth-title {
         position: absolute;
         top: -20rem;
-        font-size: 3.5rem;
+        font-size: 2.5rem;
         left: 50%;
         transform: translate(-50%, -50%);
     }

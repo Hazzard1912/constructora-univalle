@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 
-export const WelcomePage = () => {
+export const DashboardPage = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [showBoxes, setShowBoxes] = useState(false);
     const [showDashboard, setShowDashboard] = useState(false);
