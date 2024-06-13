@@ -6,6 +6,7 @@ export const userSlice = createSlice({
         status: 'checking',
         uid: null,
         email: null,
+        role: null,
         displayName: null,
         errorMessage: null
     },
@@ -18,6 +19,7 @@ export const userSlice = createSlice({
             state.status = 'authenticated';
             state.uid = payload.uid;
             state.email = payload.email;
+            state.role = 'Gerente';
             state.displayName = payload.displayName;
             state.errorMessage = null;
         },
@@ -29,6 +31,7 @@ export const userSlice = createSlice({
             state.status = 'not-authenticated';
             state.uid = null;
             state.email = null;
+            state.role = null;
             state.displayName = null;
             state.errorMessage = payload?.errorMessage;
         },

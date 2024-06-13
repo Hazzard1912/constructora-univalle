@@ -5,7 +5,7 @@ import { AuthLayout } from "../layout/AuthLayout";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginSuccess } from "../../store/slices/user/userSlice";
+import { loginSuccess, loginStart, loginFailure } from "../../store/slices/user/userSlice";
 import "../styles/LoginPage.css";
 
 export const LoginPage = () => {
@@ -19,31 +19,55 @@ export const LoginPage = () => {
     }
 
     const handleSubmit = async (values) => {
-        console.log('Submit values:', values);
+
         if (!captchaValue) {
             alert("Por favor, verifica que no eres un robot.");
             return;
         }
 
+        dispatch(loginStart());
+        console.log('Submit values:', values);
+
         try {
-            /*const response = await fetch('http://127.0.0.1:8000/api/login/', {
+            const response = await fetch('http://127.0.0.1:8000/api/login/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(values),
-            });*/
+            });
 
-            if (true) {
-                dispatch(loginSuccess({
+            console.log(response);
+
+            if (response.ok) {
+                const user = {
                     uid: "1",
-                    email: "jondoe@mail.com",
-                    displayName: "Jon Doe"
+                    email: values.email,
+                    displayName: "Ejemplo",
+                };
+
+                dispatch(loginSuccess(user));
+
+                localStorage.setItem('user', JSON.stringify({
+                    ...user,
+                    status: 'authenticated',
+                    role: 'Gerente'
                 }));
+                navigate('/gestion');
+            } else {
+                dispatch(loginFailure(
+                    {
+                        errorMessage: 'Ocurrió un error al procesar la solicitud.'
+                    }
+                ));
+                alert('Credenciales incorrectas');
             }
 
         } catch (error) {
             console.error('Error:', error);
+            dispatch(loginFailure({
+                errorMessage: 'Ocurrió un error al procesar la solicitud.'
+            }));
             alert('Ocurrió un error al procesar la solicitud.');
         }
     };
@@ -54,7 +78,7 @@ export const LoginPage = () => {
                 initialValues={{ email: "", password: "" }}
                 validationSchema={Yup.object({
                     email: Yup.string().email("El email no es válido").required("Requerido"),
-                    password: Yup.string().min(6, "La contraseña debe tener al menos 6 caracteres").required("Requerido")
+                    password: Yup.string().required("Requerido")
                 })}
                 onSubmit={handleSubmit}
             >

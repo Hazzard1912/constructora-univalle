@@ -7,7 +7,7 @@
 
 .login-form input {
     margin-top: 1rem;
-    font-size: 2rem;
+    font-size: 1.2rem;
     padding: 1rem 2rem;
     background-color: transparent;
     border: none;
@@ -26,7 +26,7 @@
 
 .login-form button {
     margin-top: 1rem;
-    font-size: 2rem;
+    font-size: 1.2rem;
     border-radius: 8px;
     margin-top: 2rem;
     padding: 1rem 2rem;
@@ -34,7 +34,7 @@
 
 .error {
     color: red;
-    font-size: 1.5rem;
+    font-size: 1rem;
     margin-top: 1rem;
 }
 
