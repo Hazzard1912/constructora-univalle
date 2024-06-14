@@ -10,7 +10,7 @@ export const Navbar = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
-    const { displayName } = useSelector((state) => state.user);
+    const { displayName  } = useSelector((state) => state.user);
 
     const dispatch = useDispatch();
 

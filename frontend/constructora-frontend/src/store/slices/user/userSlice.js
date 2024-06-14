@@ -19,7 +19,7 @@ export const userSlice = createSlice({
             state.status = 'authenticated';
             state.uid = payload.uid;
             state.email = payload.email;
-            state.role = 'Gerente';
+            state.role = payload.role;
             state.displayName = payload.displayName;
             state.errorMessage = null;
         },

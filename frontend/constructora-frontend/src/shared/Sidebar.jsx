@@ -21,7 +21,7 @@ const menuOptions = {
         { title: 'Gestión de tareas', path: '/gestion/tareas', icon: <TaskIcon style={{ fontSize: '2rem' }} /> },
         { title: 'Gestión de avances', path: '/gestion/avances', icon: <SpeedIcon style={{ fontSize: '2rem' }} /> },
     ],
-    'Capataz': [
+    'Capataz de obra': [
         { title: 'Avances', path: 'avances', icon: <SpeedIcon style={{ fontSize: '2rem' }} /> },
     ],
 }

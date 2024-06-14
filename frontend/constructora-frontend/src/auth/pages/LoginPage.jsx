@@ -36,14 +36,12 @@ export const LoginPage = () => {
             });
 
             const data = await response.json();
-
             if (response.ok) {
                 const user = {
                     uid: data.id,
-                    username: data.username,
+                    email: data.username,
                     role: data.role,
-                    firstName: data.first_name,
-                    lastName: data.last_name,
+                    displayName: data.first_name + ' ' + data.last_name,
                 };
 
                 dispatch(loginSuccess(user));
