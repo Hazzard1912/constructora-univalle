@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password, check_password
+
 
 # Create your models here.
 # Django -Admin
@@ -44,6 +46,13 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.role}"
+    
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
+    
     
 class Work(models.Model):
     STATUS_CHOICES = [

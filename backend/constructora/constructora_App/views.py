@@ -12,28 +12,27 @@ from .models import UserProfile, Work, Task, TaskProgress
 from .Api.serializers import UserProfileSerializer, WorkSerializer, TaskSerializer, TaskProgressSerializer
 
         
-# LOGICA DE LOGIN 
+# LOGICA MODIFICADA DE LOGIN 
 @api_view(['POST'])
 def login_view(request):
-    email = request.data.get('email')
+    username = request.data.get('username')
     password = request.data.get('password')
 
     try:
-        user = User.objects.get(email=email)
-        if user.is_superuser:
-            # Si el usuario es un superusuario, intenta autenticarlo
-            user = authenticate(request, username=user.username, password=password)
-            if user is not None:
-                # Si las credenciales son válidas, inicia sesión
-                login(request, user)
-                return JsonResponse({'status': 'ok', 'message': 'Superuser authenticated successfully'})
-            else:
-                # Si las credenciales son inválidas, devuelve un mensaje de error
-                return JsonResponse({'status': 'error', 'message': 'Invalid email or password'}, status=400)
+        user = UserProfile.objects.get(username=username)
+        if user.check_password(password):
+            # Si las credenciales son válidas, devuelve la información del usuario
+            return JsonResponse({
+                'status': 'ok',
+                'username': user.username,
+                'role': user.role,
+                'first_name': user.first_name,
+                'last_name': user.last_name
+            })
         else:
-            # Si el usuario no es un superusuario, devuelve un mensaje de error
-            return JsonResponse({'status': 'error', 'message': 'User is not a superuser'}, status=400)
-    except User.DoesNotExist:
+            # Si las credenciales son inválidas, devuelve un mensaje de error
+            return JsonResponse({'status': 'error', 'message': 'Invalid username or password'}, status=400)
+    except UserProfile.DoesNotExist:
         # Si el usuario no existe, devuelve un mensaje de error
         return JsonResponse({'status': 'error', 'message': 'User does not exist'}, status=400)
     
@@ -62,8 +61,10 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             address=request.data.get('address'),
             phone_number=request.data.get('phone_number'),
         )
+        user.set_password(request.data.get('password'))  # Encripta la contraseña
         user.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
     
 class WorkViewSet(viewsets.ModelViewSet):
     queryset = Work.objects.all()

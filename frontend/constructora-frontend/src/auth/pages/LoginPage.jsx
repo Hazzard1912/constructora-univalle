@@ -19,14 +19,12 @@ export const LoginPage = () => {
     }
 
     const handleSubmit = async (values) => {
-
         if (!captchaValue) {
             alert("Por favor, verifica que no eres un robot.");
             return;
         }
 
         dispatch(loginStart());
-        console.log('Submit values:', values);
 
         try {
             const response = await fetch('http://127.0.0.1:8000/api/login/', {
@@ -37,29 +35,28 @@ export const LoginPage = () => {
                 body: JSON.stringify(values),
             });
 
-            console.log(response);
+            const data = await response.json();
 
             if (response.ok) {
                 const user = {
-                    uid: "1",
-                    email: values.email,
-                    displayName: "Ejemplo",
+                    uid: data.id,
+                    username: data.username,
+                    role: data.role,
+                    firstName: data.first_name,
+                    lastName: data.last_name,
                 };
 
                 dispatch(loginSuccess(user));
 
                 localStorage.setItem('user', JSON.stringify({
                     ...user,
-                    status: 'authenticated',
-                    role: 'Gerente'
+                    status: 'authenticated'
                 }));
                 navigate('/gestion');
             } else {
-                dispatch(loginFailure(
-                    {
-                        errorMessage: 'Ocurrió un error al procesar la solicitud.'
-                    }
-                ));
+                dispatch(loginFailure({
+                    errorMessage: data.message || 'Ocurrió un error al procesar la solicitud.'
+                }));
                 alert('Credenciales incorrectas');
             }
 
@@ -75,9 +72,9 @@ export const LoginPage = () => {
     return (
         <AuthLayout title="Constructora Univalle">
             <Formik
-                initialValues={{ email: "", password: "" }}
+                initialValues={{ username: "", password: "" }}
                 validationSchema={Yup.object({
-                    email: Yup.string().email("El email no es válido").required("Requerido"),
+                    username: Yup.string().required("Requerido"),
                     password: Yup.string().required("Requerido")
                 })}
                 onSubmit={handleSubmit}
@@ -85,8 +82,8 @@ export const LoginPage = () => {
                 {({ errors, touched, values }) => (
                     <Form className="login-form">
                         <div className="mb-4">
-                            <Field type="email" id="email" name="email" placeholder="Correo" />
-                            <ErrorMessage name="email" component="div" className="text-danger error" />
+                            <Field type="text" id="username" name="username" placeholder="Username" />
+                            <ErrorMessage name="username" component="div" className="text-danger error" />
                         </div>
                         <div className="mb-4">
                             <Field type="password" id="password" name="password" placeholder="Contraseña" />
@@ -96,7 +93,7 @@ export const LoginPage = () => {
                         <button
                             type="submit"
                             className="btn btn-primary"
-                            disabled={Object.keys(errors).some(x => touched[x]) || (!values.email || !values.password)}>
+                            disabled={Object.keys(errors).some(x => touched[x]) || (!values.username || !values.password)}>
                             Ingresar
                         </button>
                     </Form>
