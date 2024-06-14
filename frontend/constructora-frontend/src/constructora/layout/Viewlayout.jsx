@@ -1,7 +1,9 @@
+/* eslint-disable react/prop-types */
 import { Row, Col, Button, Modal } from 'react-bootstrap';
 import DataTable from 'react-data-table-component';
 
-export const ViewLayout = ({ title, data, columns, FormComponent, onSubmit, formInitialValues, showModal, handleCloseModal, handleShowModal }) => {
+
+export const ViewLayout = ({ title, data, columns, FormComponent, onSubmit, formInitialValues, showModal, handleCloseModal, handleShowModal, users, works, tasks }) => {
 
     if(!data) {
         return(
@@ -37,6 +39,7 @@ export const ViewLayout = ({ title, data, columns, FormComponent, onSubmit, form
                     data={data}
                     pagination
                     highlightOnHover
+                    paginationPerPage={7}
                     
                 />
             </Row>
@@ -46,7 +49,7 @@ export const ViewLayout = ({ title, data, columns, FormComponent, onSubmit, form
                     <Modal.Title>Agregar {title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <FormComponent onSubmit={onSubmit} formInitialValues={formInitialValues} />
+                    <FormComponent onSubmit={onSubmit} formInitialValues={formInitialValues} users={users} works={works} tasks={tasks} />
                 </Modal.Body>
             </Modal>
             <style>

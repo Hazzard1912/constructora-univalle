@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import logo from '../assets/logo.png';
 import { List, ListItem, ListItemIcon, ListItemText, Divider } from '@mui/material';
 import PeopleIcon from '@mui/icons-material/People';
 import EngineeringIcon from '@mui/icons-material/Engineering';
@@ -32,7 +33,10 @@ export const Sidebar = () => {
     return (
         <div className='custom-sidebar'>
             <div className='custom-logo'>
-                Logo
+                <img src={logo} alt="Logo constructora" style={{
+                    height: '100px',
+                    width: '100px',
+                }}/>
             </div>
             <Divider />
             <List>
@@ -87,12 +91,9 @@ export const Sidebar = () => {
                     .custom-logo {
                         height: 64px;
                         display: flex;
-                        justify-content: center;
+                        justify-content: start;
                         align-items: center;
-                        font-size: 24px;
-                        font-weight: bold;
-                        background-color: #fff;
-                        margin-bottom: 10px;
+                        margin: 10px 0;
                     }
 
                     .custom-text {
