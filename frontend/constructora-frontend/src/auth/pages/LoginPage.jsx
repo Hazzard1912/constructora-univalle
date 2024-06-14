@@ -43,7 +43,7 @@ export const LoginPage = () => {
                 const user = {
                     uid: "1",
                     email: values.email,
-                    displayName: "Ejemplo",
+                    displayName: values.email, // De momento, el nombre de usuario es el email
                 };
 
                 dispatch(loginSuccess(user));
