@@ -20,8 +20,8 @@ export const DashboardRoutes = () => {
         <Route path="/" element={<Dashboard />} />
         {role === 'Gerente' && <Route path="usuarios" element={<Usuarios />} />}
         {(role === 'Gerente' || role === 'Director de obra') && <Route path="obras" element={<Obras />} />}
-        {(role === 'Gerente' || role === 'Director de obra') && <Route path="tareas" element={<Tareas />} />}
-        {(role === 'Gerente' || role === 'Director de obra' || role === 'Capataz') && <Route path="avances" element={<Avances />} />}
+        {role === 'Director de obra' && <Route path="tareas" element={<Tareas />} />}
+        {(role === 'Director de obra' || role === 'Capataz de obra') && <Route path="avances" element={<Avances />} />}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       <Outlet />
